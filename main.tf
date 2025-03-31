@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 data "aws_secretsmanager_secret" "docker_hub_creds" {
-  secret_id = "docker"  
+  name = "docker"  
 }
 
 data "aws_secretsmanager_secret_version" "docker_hub_creds_version" {
