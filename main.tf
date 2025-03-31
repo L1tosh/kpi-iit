@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 data "aws_secretsmanager_secret" "docker_hub_creds" {
-  name = "kpi-iit-docker"  
+  secret_id = "docker"  
 }
 
 data "aws_secretsmanager_secret_version" "docker_hub_creds_version" {
@@ -23,6 +23,10 @@ data "aws_secretsmanager_secret_version" "docker_hub_creds_version" {
 
 locals {
   docker_credentials = jsondecode(data.aws_secretsmanager_secret_version.docker_hub_creds_version.secret_string)
+}
+
+output "docker_credentials" {
+  value = local.docker_credentials
 }
 
 resource "aws_security_group" "app_sg" {
