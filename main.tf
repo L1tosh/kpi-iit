@@ -13,16 +13,16 @@ provider "aws" {
   region = "eu-central-1" 
 }
 
-data "aws_secretsmanager_secret" "docker_hub_creds" {
+data "aws_secretsmanager_secret" "docker" {
   name = "arn:aws:secretsmanager:eu-central-1:064949790639:secret:docker"  
 }
 
-data "aws_secretsmanager_secret_version" "docker_hub_creds_version" {
-  secret_id = data.aws_secretsmanager_secret.docker_hub_creds.id
+data "aws_secretsmanager_secret_version" "docker_version" {
+  secret_id = data.aws_secretsmanager_secret.docker.id
 }
 
 locals {
-  docker_credentials = jsondecode(data.aws_secretsmanager_secret_version.docker_hub_creds_version.secret_string)
+  docker_credentials = jsondecode(data.aws_secretsmanager_secret_version.docker_version.secret_string)
 }
 
 output "docker_credentials" {
