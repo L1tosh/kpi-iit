@@ -14,7 +14,6 @@ provider "aws" {
 
 data "aws_secretsmanager_secret_version" "creds" {
   secret_id  = "docker-hub-creds-v2"
-  version_id = "8f05045d-4284-49e3-a2f7-ca0ef7eb618b"
 }
 
 locals {
