@@ -2,15 +2,14 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.16"
+      version = "~> 5.0"
     }
   }
-
-  required_version = ">= 1.11.0"
+  required_version = ">= 1.11.3"
 }
 
 provider "aws" {
-  region = "eu-central-1" 
+  region = "eu-central-1"
 }
 
 data "aws_secretsmanager_secret_version" "creds" {
@@ -18,9 +17,7 @@ data "aws_secretsmanager_secret_version" "creds" {
 }
 
 locals {
-  docker_creds = jsondecode(
-    data.aws_secretsmanager_secret_version.creds.secret_string
-    )
+  docker_creds = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)
 }
 
 resource "aws_security_group" "app_sg" {
@@ -31,7 +28,7 @@ resource "aws_security_group" "app_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -50,9 +47,9 @@ resource "aws_security_group" "app_sg" {
 }
 
 resource "aws_instance" "app" {
-  ami           = "ami-03f71e078efdce2c9" 
-  instance_type = "t3.micro"
-  key_name      = "keyforlab4"  
+  ami             = "ami-03f71e078efdce2c9"
+  instance_type   = "t3.micro"
+  key_name        = "keyforlab4"
   security_groups = [aws_security_group.app_sg.name]
 
   user_data = <<-EOF
@@ -69,4 +66,6 @@ resource "aws_instance" "app" {
   tags = {
     Name = "my-app-instance"
   }
+
+  depends_on = [data.aws_secretsmanager_secret_version.creds]
 }
