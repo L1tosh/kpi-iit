@@ -35,13 +35,13 @@ resource "aws_instance" "app" {
 
   user_data = <<-EOF
     #!/bin/bash
-    apt update -y
-    apt install -y docker.io
+    sudo apt update -y
+    sudo apt install -y docker.io
     systemctl start docker
     systemctl enable docker
-    docker login -u ${local.docker_creds.DOCKER_USERNAME} -p ${local.docker_creds.DOCKER_HUB_TOKEN}
-    docker run -d -p 80:80 --name my-web-app l1tosh/my-web-app:latest
-    docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped containrrr/watchtower --interval 60
+    sudo docker login -u ${local.docker_creds.DOCKER_USERNAME} -p ${local.docker_creds.DOCKER_HUB_TOKEN}
+    sudo docker run -d -p 80:80 --name my-web-app l1tosh/my-web-app:latest
+    sudo docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped containrrr/watchtower --interval 60
   EOF
 
   tags = {
