@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 data "aws_secretsmanager_secret" "docker_hub_creds" {
-  name = "arn:aws:secretsmanager:eu-central-1:064949790639:secret:docker-*"  
+  name = "arn:aws:secretsmanager:eu-central-1:064949790639:secret:docker"  
 }
 
 data "aws_secretsmanager_secret_version" "docker_hub_creds_version" {
