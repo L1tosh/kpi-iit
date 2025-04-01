@@ -21,7 +21,7 @@ locals {
 }
 
 resource "aws_security_group" "app_sg" {
-  name        = "app_security_group"
+  name        = "app_security_group_new"
   description = "Allow inbound traffic for the app"
 
   ingress {
