@@ -20,6 +20,32 @@ locals {
   docker_creds = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)
 }
 
+resource "aws_security_group" "app_sg" {
+  name        = "app_security_group_new"
+  description = "Allow inbound traffic for the app"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_instance" "app" {
   ami             = "ami-03f71e078efdce2c9"
   instance_type   = "t3.micro"
