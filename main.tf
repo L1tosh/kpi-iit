@@ -23,10 +23,6 @@ locals {
     )
 }
 
-output "docker_credentials" {
-  value = local.docker_credentials
-}
-
 resource "aws_security_group" "app_sg" {
   name        = "app_security_group"
   description = "Allow inbound traffic for the app"
