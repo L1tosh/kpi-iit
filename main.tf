@@ -28,7 +28,7 @@ data "aws_security_group" "app_sg" {
 }
 
 resource "aws_instance" "app" {
-  ami             = "ami-03f71e078efdce2c9"
+  ami             = "ami-0c1ac8a41498c1a9c"
   instance_type   = "t3.micro"
   key_name        = "keyforlab4"
   security_groups = [data.aws_security_group.app_sg.name]
