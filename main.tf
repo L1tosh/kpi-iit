@@ -6,23 +6,21 @@ terraform {
     }
   }
 
-  required_version = ">= 1.2.0"
+  required_version = ">= 1.11.0"
 }
 
 provider "aws" {
   region = "eu-central-1" 
 }
 
-data "aws_secretsmanager_secret" "docker" {
-  name = "arn:aws:secretsmanager:eu-central-1:064949790639:secret:docker"  
-}
-
-data "aws_secretsmanager_secret_version" "docker_version" {
-  secret_id = data.aws_secretsmanager_secret.docker.id
+data "aws_secretsmanager_secret_version" "creds" {
+  secret_id = "docker-hub-creds-v2"
 }
 
 locals {
-  docker_credentials = jsondecode(data.aws_secretsmanager_secret_version.docker_version.secret_string)
+  docker_creds = jsondecode(
+    data.aws_secretsmanager_secret_version.creds.secret_string
+    )
 }
 
 output "docker_credentials" {
@@ -67,7 +65,7 @@ resource "aws_instance" "app" {
     apt install -y docker.io
     systemctl start docker
     systemctl enable docker
-    docker login -u ${local.docker_credentials["DOCKER_USERNAME"]} -p ${local.docker_credentials["DOCKER_HUB_TOKEN"]}
+    docker login -u ${local.docker_creds.DOCKER_USERNAME} -p ${local.docker_creds.DOCKER_HUB_TOKEN}
     docker run -d -p 80:80 --name my-web-app l1tosh/my-web-app:latest
     docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped containrrr/watchtower --interval 60
   EOF
